@@ -254,7 +254,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <nav>
         <a href="#culture" onclick="showSection('culture')">Culture</a>
         <a href="#downloads" onclick="showSection('downloads')">Downloads</a>
-        <a href="#history" onclick="showSection('history')">History</a>
+        <a href="#picture" onclick="showSection('picture')">Picture</a>
         <a href="#about" onclick="showSection('about')">About</a>
             </nav>
 
@@ -264,7 +264,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <img src="images/logo.jpg" alt="ALWZSOFT Logo" style="max-width:200px; height:auto; display:block; margin:0 auto 20px;">
                 <h2>Connecting You to Korea, Always.</h2>
                 <p>Discover the beauty of Korean culture through innovative tools and insights. We regularly update our programs to bring you closer to Korea.</p>
-                <p>Latest Update: 2026.01.19</p>
+                <p>Latest Update: 2026.01.20</p>
             </section>
         </div>
 
@@ -329,16 +329,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </section>
         </div>
 
-        <div id="history-content" style="display:none;">
+        <div id="picture-content" style="display:none;">
             <section class="section">
-                <h2>Update History</h2>
-                <p>Check update history with screenshots.</p>
+                <h2>Picture Gallery</h2>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <span style="font-size: 0.8em; color: #888; margin-right: 10px;">Share:</span>
+                    <a href="#" onclick="sharePageToX(event, 'picture')" class="page-share-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" onclick="sharePageToFacebook(event, 'picture')" class="page-share-icon"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" onclick="sharePageToWhatsApp(event, 'picture')" class="page-share-icon"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" onclick="copyPageLink(event, 'picture')" class="page-share-icon"><i class="fas fa-link"></i></a>
+                </div>
+                <p>Explore beautiful pictures from Korea.</p>
                 <div class="features">
-                    <div class="feature-card">
-                        <h3>2026-01-18 Update</h3>
-                        <img src="images/2026-01-18 130616.png" alt="Update Screenshot" style="max-width:100%; height:auto; border-radius:5px;">
-                        <p>Recent update screenshot</p>
-                    </div>
                 </div>
             </section>
         </div>
@@ -355,6 +357,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <script src="data/posts.js"></script>
     <script src="data/downloads.js"></script>
+    <script src="data/pictures.js"></script>
     <script>
         // 1. 포스트 HTML 생성 함수
         function generatePostHTML(post) {
@@ -398,6 +401,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
         }
 
+        function loadPictures() {
+            const container = document.querySelector('#picture-content .features');
+            if (typeof pictures !== 'undefined') {
+                container.innerHTML = pictures.map(pic => `
+                    <div class="feature-card">
+                        <img src="${pic.img}" alt="" style="max-width:100%; height:200px; object-fit:cover; border-radius:5px; cursor:pointer;" onclick="openModal(this.src)">
+                        <p class="post-date">${pic.date}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
         // 4. 필터 및 자동 정렬 기능 (핵심 수정 부분)
         function initializeFilters() {
             const filterButtons = document.querySelectorAll('.filter-btn');
@@ -438,7 +453,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         // 5. 섹션 전환 함수
         function showSection(sectionId) {
-            const sections = ['home', 'downloads', 'culture', 'history', 'about'];
+            const sections = ['home', 'downloads', 'culture', 'picture', 'about'];
             sections.forEach(s => {
                 const el = document.getElementById(s + '-content');
                 if (el) el.style.display = 'none';
@@ -461,6 +476,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         window.onload = function() {
             loadPosts();
             loadDownloads();
+            loadPictures();
             initializeFilters(); // 카드 생성 후 필터 초기화
             showSection('home');
         };
