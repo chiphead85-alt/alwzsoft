@@ -74,7 +74,7 @@
             font-weight: bold;
             transition: color 0.3s ease;
         }
-        nav a:hover, nav a.active {
+        nav a:hover, nav a.active, header h1.active {
             color: #FFD700;
         }
         .container {
@@ -282,7 +282,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <div class="feature-card">
                         <h3>K-Pulse by Alwzsoft</h3>
                         <p>A simple desktop app to monitor USD/KRW exchange rates and Samsung Electronics stock prices in real-time.</p>
-                        <a href="/dist/iStock_FX_Tracker.exe" download class="btn">Download</a>
+                        <a href="iStock_FX_Tracker.exe" download class="btn">Download</a>
                         <ul style="text-align: left;">
                             <li>Real-time data updates every 10 seconds</li>
                             <li>Easy-to-use GUI interface</li>
@@ -292,7 +292,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <div class="feature-card" id="won-calc">
                         <h3>Won-Calc by Alwzsoft</h3>
                         <p>Convert USD to KRW using real-time exchange rates and see how many bowls of Gukbap you can buy!</p>
-                        <a href="/dist/won-calc.exe" download class="btn">Download</a>
+                        <a href="won-calc.exe" download class="btn">Download</a>
                         <ul style="text-align: left;">
                             <li>Real-time USD/KRW conversion</li>
                             <li>Fun calculation with Gukbap bowls</li>
@@ -302,7 +302,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <div class="feature-card" id="k-time-hub">
                         <h3>K-Time Hub by Alwzsoft</h3>
                         <p>Korean business clock showing Seoul time, market status, and holiday countdowns for global collaboration.</p>
-                        <a href="/dist/k-time-hub.exe" download class="btn">Download</a>
+                        <a href="k-time-hub.exe" download class="btn">Download</a>
                         <ul style="text-align: left;">
                             <li>Real-time Seoul and local time</li>
                             <li>Korean market status & countdowns</li>
@@ -545,7 +545,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             document.getElementById(sectionId + '-content').style.display = 'block';
 
             // Add active class to clicked nav link
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else if (sectionId === 'home') {
+                document.querySelector('header h1').classList.add('active');
+            }
         }
 
         // Set default to home
