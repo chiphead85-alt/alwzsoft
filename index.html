@@ -356,6 +356,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <script src="data/posts.js"></script>
     <script src="data/downloads.js"></script>
     <script>
+        // 1. 포스트 HTML 생성 함수
         function generatePostHTML(post) {
             return `
                 <div class="feature-card" data-category="${post.category}">
@@ -367,6 +368,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             `;
         }
 
+        // 2. 다운로드 HTML 생성 함수
         function generateDownloadHTML(download) {
             const featuresHTML = download.features.map(feature => `<li>${feature}</li>`).join('');
             return `
@@ -381,93 +383,89 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             `;
         }
 
+        // 3. 데이터 로드 함수
         function loadPosts() {
             const container = document.querySelector('#culture-content .features');
-            container.innerHTML = posts.map(generatePostHTML).join('');
+            if (typeof posts !== 'undefined') {
+                container.innerHTML = posts.map(generatePostHTML).join('');
+            }
         }
 
         function loadDownloads() {
             const container = document.querySelector('#downloads-content .features');
-            container.innerHTML = downloads.map(generateDownloadHTML).join('');
+            if (typeof downloads !== 'undefined') {
+                container.innerHTML = downloads.map(generateDownloadHTML).join('');
+            }
         }
 
+        // 4. 필터 및 자동 정렬 기능 (핵심 수정 부분)
         function initializeFilters() {
             const filterButtons = document.querySelectorAll('.filter-btn');
 
             filterButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const filter = btn.getAttribute('data-filter');
+                    // 버튼 클릭 시점에 생성된 카드들을 새로 조회합니다.
                     const cards = document.querySelectorAll('#culture-content .feature-card');
 
-                    // Remove active class from all buttons
+                    // 버튼 활성화 스타일 변경
                     filterButtons.forEach(b => b.classList.remove('active'));
-
-                    // Add active class to clicked button
                     btn.classList.add('active');
 
-                    // Filter cards
                     cards.forEach(card => {
                         const category = card.getAttribute('data-category');
+                        
                         if (filter === 'all' || category === filter) {
+                            // 보여주기
                             card.style.display = 'block';
+                            // 애니메이션 효과
                             setTimeout(() => {
                                 card.style.opacity = '1';
                                 card.style.transform = 'scale(1)';
                             }, 10);
                         } else {
+                            // 숨기기
                             card.style.opacity = '0';
                             card.style.transform = 'scale(0.8)';
                             setTimeout(() => {
                                 card.style.display = 'none';
-                            }, 500);
+                            }, 400); // transition 시간과 맞춤
                         }
                     });
-
-                    // Re-order visible cards sequentially
-                    setTimeout(() => {
-                        const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
-                        visibleCards.forEach((card, index) => {
-                            card.style.order = index;
-                        });
-                    }, 510);
                 });
             });
         }
 
+        // 5. 섹션 전환 함수
         function showSection(sectionId) {
-            // Hide all sections
-            document.getElementById('home-content').style.display = 'none';
-            document.getElementById('downloads-content').style.display = 'none';
-            document.getElementById('culture-content').style.display = 'none';
-            document.getElementById('history-content').style.display = 'none';
-            document.getElementById('about-content').style.display = 'none';
-            
+            const sections = ['home', 'downloads', 'culture', 'history', 'about'];
+            sections.forEach(s => {
+                const el = document.getElementById(s + '-content');
+                if (el) el.style.display = 'none';
+            });
 
-            // Remove active class from all nav links
+            const target = document.getElementById(sectionId + '-content');
+            if (target) target.style.display = 'block';
+
+            // 네비게이션 활성화 표시
             const navLinks = document.querySelectorAll('nav a');
-            navLinks.forEach(link => link.classList.remove('active'));
-
-            // Show selected section
-            document.getElementById(sectionId + '-content').style.display = 'block';
-
-            // Add active class to clicked nav link
-            if (event && event.target) {
-                event.target.classList.add('active');
-            } else if (sectionId === 'home') {
-                document.querySelector('header h1').classList.add('active');
-            }
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick')?.includes(sectionId)) {
+                    link.classList.add('active');
+                }
+            });
         }
 
-        // Set default to home
+        // 6. 초기 실행
         window.onload = function() {
             loadPosts();
             loadDownloads();
+            initializeFilters(); // 카드 생성 후 필터 초기화
             showSection('home');
-            // Re-initialize filter functionality after loading posts
-            initializeFilters();
         };
 
-        // Modal functionality
+        /* 모달 관련 함수들 */
         var modal = document.getElementById('imageModal');
         var modalImg = document.getElementById('modalImage');
         var span = document.getElementsByClassName('close')[0];
@@ -476,16 +474,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             modal.style.display = "block";
             modalImg.src = imgSrc;
         }
+        span.onclick = function() { modal.style.display = "none"; }
+        modal.onclick = function(e) { if (e.target == modal) modal.style.display = "none"; }
 
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        modal.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
+        /* 공유 함수들 생략 (기존 코드 유지) */
 
 
 
