@@ -393,11 +393,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         function initializeFilters() {
             const filterButtons = document.querySelectorAll('.filter-btn');
-            const cards = document.querySelectorAll('#culture-content .feature-card');
 
             filterButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const filter = btn.getAttribute('data-filter');
+                    const cards = document.querySelectorAll('#culture-content .feature-card');
 
                     // Remove active class from all buttons
                     filterButtons.forEach(b => b.classList.remove('active'));
@@ -422,6 +422,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                             }, 500);
                         }
                     });
+
+                    // Re-order visible cards sequentially
+                    setTimeout(() => {
+                        const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
+                        visibleCards.forEach((card, index) => {
+                            card.style.order = index;
+                        });
+                    }, 510);
                 });
             });
         }
