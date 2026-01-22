@@ -8,13 +8,58 @@
         gtag('js', new Date());
         gtag('config', 'G-Q1YTMG8KPK');
     </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alwzsoft | Explore K-Culture</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script type="module" crossorigin src="./assets/index-Bo6-gsSM.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-BVN7E370.css">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; margin: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; min-height: 100vh; }
+        header { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
+        header h1 { margin: 0; color: white; font-size: 2em; cursor: pointer; }
+        nav { background: rgba(255, 255, 255, 0.1); padding: 10px 0; text-align: center; position: sticky; top: 0; z-index: 100; }
+        nav a { color: white; margin: 0 20px; text-decoration: none; font-weight: bold; transition: 0.3s; }
+        nav a:hover, nav a.active { color: #FFD700; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .section { background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 15px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        
+        /* 헤더 컨트롤 (필터와 정렬) */
+        .post-controls { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+        
+        /* 왼쪽 필터 버튼 */
+        .filter-buttons { text-align: left; }
+        .filter-btn { background: none; border: none; color: #666; font-weight: bold; font-size: 1em; cursor: pointer; margin-right: 15px; padding: 5px 0; transition: 0.3s; }
+        .filter-btn.active { color: #667eea; border-bottom: 3px solid #667eea; }
+
+        /* 오른쪽 정렬 버튼 */
+        .sort-buttons { text-align: right; }
+        .sort-btn { background: #f0f2ff; border: 1px solid #667eea; color: #667eea; font-size: 0.85em; cursor: pointer; padding: 4px 10px; border-radius: 5px; margin-left: 5px; transition: 0.2s; }
+        .sort-btn:hover, .sort-btn.active { background: #667eea; color: white; }
+
+        /* 포스팅 카드 배열 */
+        .features { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; margin-top: 10px; }
+        .feature-card { width: 320px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+        .feature-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; cursor: pointer; }
+        .post-date { font-size: 12px; color: #999; margin-bottom: 5px; }
+
+        #scroll-anchor { height: 20px; margin-top: 20px; }
+
+        /* 이미지 확대 모달 */
+        .img-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); cursor: zoom-out; }
+        .img-modal-content { margin: auto; display: block; max-width: 90%; max-height: 90%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 10px; }
+
+        /* 퀴즈 스타일 (2x2) */
+        .quiz-container { max-width: 400px; margin: 0 auto; text-align: center; }
+        .quiz-img-box { width: 100%; height: 200px; background: #f8f9fa; border-radius: 10px; overflow: hidden; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
+        .quiz-img-box img { width: 100%; height: 100%; object-fit: contain; }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .opt-btn { padding: 15px 5px; border: 1px solid #ddd; border-radius: 10px; background: white; cursor: pointer; font-weight: bold; font-size: 0.9em; transition: 0.2s; word-break: keep-all; }
+        .opt-btn:hover { background: #f0f2ff; border-color: #667eea; }
+        
+        .donation-btn { background: #FFD700; color: black; padding: 8px 15px; text-decoration: none; border-radius: 20px; font-weight: bold; }
+    </style>
 </head>
 <body>
 
@@ -27,7 +72,6 @@
         <a href="#home" onclick="showSection('home')">Home</a>
         <a href="#post" onclick="showSection('post')">Post</a>
         <a href="#quiz" onclick="showSection('quiz')">Quiz</a>
-        <a href="#message" onclick="showSection('message')">Bottle Message</a>
         <a href="#about" onclick="showSection('about')">About</a>
     </nav>
 
@@ -44,15 +88,15 @@
             <section class="section">
                 <div class="post-controls">
                     <div class="filter-buttons">
-                        <button class="filter-btn active" onclick="PostEngine.setFilter('all')">All</button>
-                        <button class="filter-btn" onclick="PostEngine.setFilter('culture')">Culture</button>
-                        <button class="filter-btn" onclick="PostEngine.setFilter('food')">Food</button>
-                        <button class="filter-btn" onclick="PostEngine.setFilter('shopping')">Shopping</button>
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="culture">Culture</button>
+                        <button class="filter-btn" data-filter="food">Food</button>
+                        <button class="filter-btn" data-filter="shopping">Shopping</button>
                     </div>
                     <div class="sort-buttons">
-                        <button class="sort-btn active" onclick="PostEngine.setSort('shuffle')">Shuffle</button>
-                        <button class="sort-btn" onclick="PostEngine.setSort('newest')">Newest</button>
-                        <button class="sort-btn" onclick="PostEngine.setSort('oldest')">Oldest</button>
+                        <button class="sort-btn active" onclick="setSort('shuffle')">Shuffle</button>
+                        <button class="sort-btn" onclick="setSort('newest')">Newest</button>
+                        <button class="sort-btn" onclick="setSort('oldest')">Oldest</button>
                     </div>
                 </div>
                 <div class="features" id="post-container"></div>
@@ -66,10 +110,12 @@
                     <div style="font-size: 3em; margin-bottom: 10px;">🎮</div>
                     <h2>Photo Master Quiz</h2>
                     <p>Identify the correct name of the post.</p>
-                    <button class="opt-btn" onclick="QuizEngine.start()" style="padding: 15px 40px; margin-top: 20px; background: #667eea; color: white;">Start Quiz</button>
+                    <button class="opt-btn" onclick="startNewQuiz()" style="padding: 15px 40px; margin-top: 20px; background: #667eea; color: white;">Start Quiz</button>
                 </div>
                 <div id="quiz-game-screen" style="display: none;" class="quiz-container">
-                    <div class="quiz-img-box"><img id="quiz-target-img" src=""></div>
+                    <div class="quiz-img-box">
+                        <img id="quiz-target-img" src="" alt="Quiz">
+                    </div>
                     <h3 style="color: #667eea;">What is this?</h3>
                     <div id="quiz-answer-options" class="quiz-options"></div>
                     <p id="quiz-feedback" style="margin-top: 20px; font-weight: bold; min-height: 24px;"></p>
@@ -77,21 +123,10 @@
             </section>
         </div>
 
-        <div id="message-content" style="display:none;">
-            <section class="section">
-                <div class="letter-bg">
-                    <h2 style="text-align:center;">Message in a Bottle</h2>
-                    <div id="current-message-display" class="letter-content"></div>
-                    <textarea id="message-input" class="letter-input" placeholder="Write a message..."></textarea>
-                    <button class="opt-btn" onclick="MessageBottle.save()" style="background:#667eea; color:white; width:100%;">Send into the Sea</button>
-                </div>
-            </section>
-        </div>
-
         <div id="about-content" style="display:none;">
             <section class="section">
-                <h3>Connecting Culture Through Code.</h3>
-                <p>ALWZSOFT bridges the gap between Korea and the world through interactive experiences.</p>
+                <h2>About ALWZSOFT</h2>
+                <p>Sharing the true taste and culture of Korea.</p>
             </section>
         </div>
     </div>
@@ -100,5 +135,156 @@
         <img class="img-modal-content" id="expandedImg">
     </div>
 
+    <script src="data/posts.js"></script>
+    <script>
+        let currentPage = 1;
+        const postsPerPage = 6;
+        let currentFilter = 'all';
+        let currentSort = 'shuffle'; // 기본값 랜덤
+        let filteredPosts = [];
+        let remainingPosts = [];
+        let currentCorrectAnswer = "";
+
+        // 포스트 데이터 초기화 및 정렬 적용
+        function initPosts() {
+            // 1. 필터 적용
+            let result = currentFilter === 'all' 
+                ? [...posts] 
+                : posts.filter(p => p.category === currentFilter);
+            
+            // 2. 정렬 적용
+            if (currentSort === 'shuffle') {
+                result.sort(() => Math.random() - 0.5);
+            } else if (currentSort === 'newest') {
+                result.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } else if (currentSort === 'oldest') {
+                result.sort((a, b) => new Date(a.date) - new Date(b.date));
+            }
+
+            filteredPosts = result;
+            currentPage = 1;
+            document.getElementById('post-container').innerHTML = '';
+            loadMorePosts();
+        }
+
+        // 정렬 변경 함수
+        function setSort(type) {
+            currentSort = type;
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.innerText.toLowerCase() === type) btn.classList.add('active');
+            });
+            initPosts();
+        }
+
+        function loadMorePosts() {
+            const container = document.getElementById('post-container');
+            const startIndex = (currentPage - 1) * postsPerPage;
+            const endIndex = startIndex + postsPerPage;
+            const slice = filteredPosts.slice(startIndex, endIndex);
+
+            if (slice.length === 0) return;
+
+            const html = slice.map(post => `
+                <div class="feature-card">
+                    <p class="post-date">${post.date}</p>
+                    <h3>${post.title}</h3>
+                    <img src="${post.img}" alt="${post.title}" onclick="expandImage('${post.img}')" onerror="this.src='images/logo.jpg'">
+                    <p style="text-align:left;">${post.desc}</p>
+                </div>
+            `).join('');
+
+            container.insertAdjacentHTML('beforeend', html);
+            currentPage++;
+        }
+
+        // 무한 스크롤 감지
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && document.getElementById('post-content').style.display !== 'none') {
+                loadMorePosts();
+            }
+        }, { threshold: 1.0 });
+
+        observer.observe(document.getElementById('scroll-anchor'));
+
+        function expandImage(src) {
+            document.getElementById('expandedImg').src = src;
+            document.getElementById('imageModal').style.display = "block";
+        }
+
+        function startNewQuiz() {
+            if (remainingPosts.length === 0) remainingPosts = [...posts];
+            if (posts.length < 4) { alert("Need 4+ posts!"); return; }
+
+            document.getElementById('quiz-start-screen').style.display = 'none';
+            document.getElementById('quiz-game-screen').style.display = 'block';
+            document.getElementById('quiz-feedback').innerText = "";
+
+            const randomIndex = Math.floor(Math.random() * remainingPosts.length);
+            const correctPost = remainingPosts[randomIndex];
+            currentCorrectAnswer = correctPost.title;
+            remainingPosts.splice(randomIndex, 1);
+
+            document.getElementById('quiz-target-img').src = correctPost.img;
+
+            let options = [correctPost.title];
+            let otherTitles = posts.filter(p => p.title !== correctPost.title).map(p => p.title);
+            otherTitles.sort(() => Math.random() - 0.5);
+            options.push(...otherTitles.slice(0, 3));
+            options.sort(() => Math.random() - 0.5);
+
+            document.getElementById('quiz-answer-options').innerHTML = options.map(opt => `
+                <button class="opt-btn" onclick="checkGameAnswer(this, '${opt.replace(/'/g, "\\'")}')">${opt}</button>
+            `).join('');
+        }
+
+        function checkGameAnswer(btn, selected) {
+            const feedback = document.getElementById('quiz-feedback');
+            if (selected === currentCorrectAnswer) {
+                feedback.innerText = "🎊 Correct!";
+                feedback.style.color = "#2ed573";
+                btn.style.background = "#2ed573";
+                btn.style.color = "white";
+                setTimeout(remainingPosts.length === 0 ? () => showSection('quiz') : startNewQuiz, 1200);
+            } else {
+                feedback.innerText = "❌ Incorrect!";
+                feedback.style.color = "#ff4757";
+                btn.style.background = "#ff4757";
+                btn.style.color = "white";
+                btn.disabled = true;
+            }
+        }
+
+        function showSection(id) {
+            ['home', 'post', 'quiz', 'about'].forEach(s => {
+                document.getElementById(s + '-content').style.display = 'none';
+            });
+            document.getElementById(id + '-content').style.display = 'block';
+            document.querySelectorAll('nav a').forEach(a => {
+                a.classList.remove('active');
+                if(a.getAttribute('href') === '#' + id) a.classList.add('active');
+            });
+            if(id === 'post') initPosts();
+            if(id === 'quiz') {
+                document.getElementById('quiz-start-screen').style.display = 'block';
+                document.getElementById('quiz-game-screen').style.display = 'none';
+                remainingPosts = [];
+            }
+        }
+
+        document.addEventListener('click', e => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.filter;
+                initPosts();
+            }
+        });
+
+        window.onload = () => {
+            const hash = window.location.hash.replace('#', '') || 'home';
+            showSection(hash);
+        };
+    </script>
 </body>
 </html>
